@@ -45,6 +45,10 @@ class AuthService {
       final res = await supabase.auth.signUp(
         email: email,
         password: password,
+        data: {
+          'display_name':name,
+          'role':role
+        }
       );
 
       final user = res.user;
