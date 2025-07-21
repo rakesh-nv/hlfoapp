@@ -1,39 +1,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../models/user_model.dart';
+
 class AuthService {
   final SupabaseClient supabase = Supabase.instance.client;
 
   // // -----------------------
   // // ✅ Sign Up Function
   // // -----------------------
-  // Future<String?> signUp({
-  //   required String email,
-  //   required String password,
-  //   required String name,
-  //   required String role, // "customer" or "chef"
-  // }) async {
-  //   try {
-  //     final res = await supabase.auth.signUp(
-  //       email: email,
-  //       password: password,
-  //     );
-  //     final user = res.user;
-  //     if (user != null) {
-  //       // Add user to `users` table
-  //       await supabase.from('users').insert({
-  //         'id': user.id,
-  //         'name': name,
-  //         'email': email,
-  //         'role': role,
-  //       });
-  //       return null; // success
-  //     } else {
-  //       return 'Signup failed. User is null.';
-  //     }
-  //   } catch (e) {
-  //     return e.toString();
-  //   }
-  // }
 
   Future<String?> signUp({
     required String email,
@@ -120,4 +94,24 @@ class AuthService {
   Future<void> signOut() async {
     await supabase.auth.signOut();
   }
+
+
+  // get current user
+  Future<AppUser?> getCurrentUserData() async {
+    final userId = supabase.auth.currentUser?.id;
+
+    if (userId == null) return null;
+
+    final response = await supabase
+        .from('users')
+        .select()
+        .eq('id', userId)
+        .single();
+
+    if (response == null) return null;
+
+    return AppUser.fromMap(response);
+  }
+
+
 }

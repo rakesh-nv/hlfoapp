@@ -28,18 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
       );
 
       if (result == null) {
-        print("`//////Login successful///////");
-        print(result);
-        //
-        // // Get.offAllNamed(AppRoutes.customerDashboard);
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => CustomerDashboard(),
-        //   ),
-        // );
-        //
-
+        print("////// Login successful //////");
         final role = await AuthService().getUserRole();
         if (role == 'chef') {
           Get.offAllNamed(AppRoutes.chefDashboard);
@@ -47,10 +36,10 @@ class _AuthScreenState extends State<AuthScreen> {
           Get.offAllNamed(AppRoutes.customerDashboard);
         }
       } else {
-        print("Exception : $result");
         Get.snackbar('Login Failed', result, backgroundColor: Colors.redAccent);
       }
     } else {
+
       // Sign Up
       final result = await AuthService().signUp(
         email: _emailController.text.trim(),
@@ -62,15 +51,34 @@ class _AuthScreenState extends State<AuthScreen> {
       if (result == null) {
         final role = await AuthService().getUserRole();
         if (role == 'chef') {
+          // Redirect to Restaurant Setup if chef signs up
           Get.offAllNamed(AppRoutes.chefDashboard);
         } else {
           Get.offAllNamed(AppRoutes.customerDashboard);
         }
       } else {
-        Get.snackbar('Signup Failed', result,
-            backgroundColor: Colors.redAccent);
+        Get.snackbar('Signup Failed', result, backgroundColor: Colors.redAccent);
       }
     }
+  }
+
+
+
+  void _showChefSetupDialog() {
+    Get.defaultDialog(
+      title: 'Restaurant Setup Required',
+      middleText: 'To complete sign-up as a Chef, you must provide restaurant details.',
+      textCancel: 'Cancel',
+      textConfirm: 'Continue',
+      confirmTextColor: Colors.white,
+      onConfirm: () {
+        Get.back(); // close dialog
+        Get.toNamed(AppRoutes.RestaurantSetupScreen); // push to setup screen
+      },
+      onCancel: () {
+        Get.snackbar('Signup Incomplete', 'Restaurant setup is required to continue as a chef.');
+      },
+    );
   }
 
   @override

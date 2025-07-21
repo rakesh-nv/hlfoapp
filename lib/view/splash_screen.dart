@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../services/auth_service.dart';
-import '';
+import '../services/auth_service.dart';
 import '../services/routes/app_routs.dart';
 
 class SplashScreen extends StatefulWidget {
